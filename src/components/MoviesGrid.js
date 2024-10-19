@@ -3,6 +3,7 @@ import MovieCard from "./MovieCard";
 
 export default function MoviesGrid() {
   const [movies, setMovies] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     fetch("./movies.json")
@@ -10,11 +11,23 @@ export default function MoviesGrid() {
       .then((movies) => setMovies(movies));
   }, []);
 
+  const filteredMovies = movies.filter((movie) => movie.title.toLowerCase().trim().includes(searchTerm.toLowerCase().trim()));
+
   return (
-    <div className="movies-grid">
-      {movies.map((movie) => (
-        <MovieCard key={movie.id} movie={movie} />
-      ))}
+    <div>
+      <input
+        type="text"
+        id="search"
+        className="search-input"
+        placeholder="Search Movies"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+      <div className="movies-grid">
+        {filteredMovies.map((movie) => (
+          <MovieCard key={movie.id} movie={movie} />
+        ))}
+      </div>
     </div>
   );
 }
